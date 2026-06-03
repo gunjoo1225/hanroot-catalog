@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HANROOT 2026 COLLECTION</title>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --gold: #c9a96e;
+      --gold-dim: rgba(201,169,110,0.4);
+      --bg: #08080d;
+      --surface: rgba(255,255,255,0.04);
+    }
+
+    body {
+      background: var(--bg);
+      color: #fff;
+      font-family: 'Helvetica Neue', 'Apple SD Gothic Neo', Arial, sans-serif;
+      height: 100dvh;
+      overflow: hidden;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    /* ── Header ── */
+    header {
+      position: fixed;
+      top: 0; left: 0; right: 0; z-index: 60;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 36px;
+      background: linear-gradient(180deg, rgba(8,8,13,0.96) 60%, transparent);
+    }
+
+    .logo-group {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .logo {
+      font-size: 17px;
+      font-weight: 800;
+      letter-spacing: 6px;
+      color: var(--gold);
+    }
+
+    .logo-sep {
+      width: 1px; height: 14px;
+      background: var(--gold-dim);
+    }
+
+    .collection-label {
+      font-size: 10px;
+      letter-spacing: 3px;
+      color: rgba(255,255,255,0.35);
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .page-counter {
+      font-size: 11px;
+      letter-spacing: 2px;
+      color: rgba(255,255,255,0.3);
+    }
+
+    /* Progress bar */
+    .progress-bar {
+      position: fixed;
+      top: 0; left: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--gold), rgba(201,169,110,0.3));
+      transition: width 0.35s ease;
+      z-index: 70;
+    }
+
+    /* ── Viewer ── */
+    .viewer {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 64px 76px 80px;
+    }
+
+    .img-stage {
+      position: relative;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .catalog-img {
+      max-height: 100%;
+      max-width: 100%;
+      object-fit: contain;
+      border-radius: 2px;
+      box-shadow: 0 28px 80px rgba(0,0,0,0.75), 0 8px 24px rgba(0,0,0,0.5);
+      transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+
+    .catalog-img.out {
+      opacity: 0;
+      transform: scale(0.985);
+    }
+
+    .page-type-badge {
+      position: absolute;
+      top: -26px; left: 0;
+      font-size: 9px;
+      letter-spacing: 3px;
+      font-weight: 600;
+      transition: color 0.3s;
+    }
+
+    .badge-dark  { color: rgba(201,169,110,0.65); }
+    .badge-light { color: rgba(160,200,220,0.65); }
+    .badge-detail { color: rgba(255,255,255,0.3); }
+
+    /* ── Nav Buttons ── */
+    .nav-btn {
+      position: fixed;
+      top: 50%; transform: translateY(-50%);
+      width: 42px; height: 42px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.04);
+      color: rgba(255,255,255,0.55);
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: all 0.2s ease;
+      backdrop-filter: blur(6px);
+      z-index: 60;
+    }
+
+    .nav-btn:hover:not(:disabled) {
+      border-color: var(--gold);
+      color: var(--gold);
+      background: rgba(201,169,110,0.08);
+    }
+
+    .nav-btn:disabled { opacity: 0.15; cursor: default; }
+    .nav-btn svg { width: 17px; height: 17px; stroke-width: 2; }
+    #btnPrev { left: 14px; }
+    #btnNext { right: 14px; }
+
+    /* ── Chapter Bar ── */
+    .chapter-bar {
+      position: fixed;
+      bottom: 0; left: 0; right: 0; z-index: 60;
+      padding: 10px 36px 14px;
+      background: linear-gradient(0deg, rgba(8,8,13,0.97) 65%, transparent);
+      display: flex;
+      justify-content: center;
+      align-items: flex-end;
+      gap: 2px;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .chapter-bar::-webkit-scrollbar { display: none; }
+
+    .ch-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      padding: 5px 11px;
+      cursor: pointer;
+      border-radius: 4px;
+      opacity: 0.38;
+      transition: opacity 0.2s, background 0.2s;
+      min-width: 56px;
+      flex-shrink: 0;
+    }
+
+    .ch-item:hover { opacity: 0.72; }
+    .ch-item.active { opacity: 1; background: rgba(255,255,255,0.04); }
+
+    .ch-num {
+      font-size: 8.5px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      color: var(--gold);
+    }
+
+    .ch-title {
+      font-size: 7.5px;
+      letter-spacing: 0.4px;
+      color: rgba(255,255,255,0.65);
+      white-space: nowrap;
+    }
+
+    .ch-dots {
+      display: flex;
+      gap: 3px;
+      margin-top: 1px;
+    }
+
+    .dot {
+      width: 5px; height: 5px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.15);
+      transition: background 0.25s;
+    }
+    .dot.on { background: var(--gold); }
+    .dot.past { background: rgba(201,169,110,0.35); }
+
+    .ch-sep {
+      width: 1px; height: 22px;
+      background: rgba(255,255,255,0.07);
+      align-self: center;
+      flex-shrink: 0;
+    }
+
+    /* ── Tone Indicator ── */
+    .tone-pill {
+      font-size: 9px;
+      letter-spacing: 2px;
+      padding: 3px 10px;
+      border-radius: 20px;
+      border: 1px solid rgba(255,255,255,0.1);
+      color: rgba(255,255,255,0.3);
+      transition: all 0.3s;
+    }
+    .tone-pill.dark-pill  { border-color: var(--gold-dim); color: rgba(201,169,110,0.6); }
+    .tone-pill.light-pill { border-color: rgba(160,200,220,0.3); color: rgba(160,200,220,0.6); }
+
+    /* ── Loading flash ── */
+    .flash {
+      position: fixed; inset: 0;
+      background: var(--bg);
+      z-index: 55;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.18s ease;
+    }
+    .flash.show { opacity: 1; pointer-events: all; }
+  </style>
+</head>
+<body>
+
+<div class="progress-bar" id="progressBar"></div>
+
+<header>
+  <div class="logo-group">
+    <span class="logo">HANROOT</span>
+    <span class="logo-sep"></span>
+    <span class="collection-label">2026 COLLECTION</span>
+  </div>
+  <div class="header-right">
+    <span class="tone-pill" id="tonePill"></span>
+    <span class="page-counter" id="pageCounter"></span>
+  </div>
+</header>
+
+<div class="viewer">
+  <div class="img-stage">
+    <div class="page-type-badge" id="typeBadge"></div>
+    <img class="catalog-img" id="catalogImg" src="" alt="" draggable="false">
+  </div>
+</div>
+
+<button class="nav-btn" id="btnPrev" onclick="navigate(-1)" aria-label="이전">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="15 18 9 12 15 6"/></svg>
+</button>
+<button class="nav-btn" id="btnNext" onclick="navigate(1)" aria-label="다음">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="9 18 15 12 9 6"/></svg>
+</button>
+
+<div class="flash" id="flash"></div>
+<nav class="chapter-bar" id="chapterBar"></nav>
+
+<script>
+  // ── Data ──────────────────────────────────────────────────────────────────
+
+  const DARK   = 'images/dark/';
+  const LIGHT  = 'images/light/';
+  const DETAIL = 'images/detail/';
+
+  const darkFiles  = ['ch01.png','ch02.png','ch03.png','ch04.png','ch05.png','ch06.png','ch07.png','ch08.png'];
+  const lightFiles = ['ch01.png','ch02.png','ch03.png','ch04.png','ch05.png','ch06.png','ch07.png','ch08.png'];
+  const detailFiles= ['ch01.png','ch02.png','ch03.png','ch04.png','ch05.png','ch06.png','ch07.png','ch08.png'];
+
+  // tone: 'dark' | 'light' — which dobira to show for this chapter
+  const chapters = [
+    { num:'01', title:'Security',      sub:'경비복·경찰복',    tone:'dark'  },
+    { num:'02', title:'Tactical',      sub:'특수경비·흑복',    tone:'dark'  },
+    { num:'03', title:'Business Wear', sub:'사무용 잠바·조끼', tone:'light' },
+    { num:'04', title:'Work Uniform',  sub:'산업용 작업복',    tone:'dark'  },
+    { num:'05', title:'Outerwear',     sub:'항공·방한 잠바',   tone:'light' },
+    { num:'06', title:'Pants',         sub:'바지 라인',        tone:'light' },
+    { num:'07', title:'T-Shirts',      sub:'티셔츠',           tone:'light' },
+    { num:'08', title:'Accessory',     sub:'모자·벨트·악세사리', tone:'dark' },
+  ];
+
+  // Build page list: dobira → detail for each chapter
+  const pages = [];
+  chapters.forEach((ch, i) => {
+    const dobiraFile = (ch.tone === 'dark' ? DARK : LIGHT) + (ch.tone === 'dark' ? darkFiles[i] : lightFiles[i]);
+    const detailFile = DETAIL + detailFiles[i];
+    pages.push({ chIdx: i, type: 'dobira', tone: ch.tone, src: dobiraFile });
+    pages.push({ chIdx: i, type: 'detail', tone: 'neutral', src: detailFile });
+  });
+
+  // Preload cache
+  const imgCache = {};
+  function preload(src) {
+    if (!imgCache[src]) { const i = new Image(); i.src = enc(src); imgCache[src] = i; }
+  }
+
+  // ── Encode ────────────────────────────────────────────────────────────────
+  function enc(path) { return path; }
+
+  // ── State ─────────────────────────────────────────────────────────────────
+  let cur = 0;
+
+  const elImg     = document.getElementById('catalogImg');
+  const elCounter = document.getElementById('pageCounter');
+  const elBadge   = document.getElementById('typeBadge');
+  const elTone    = document.getElementById('tonePill');
+  const elPrev    = document.getElementById('btnPrev');
+  const elNext    = document.getElementById('btnNext');
+  const elProg    = document.getElementById('progressBar');
+  const elFlash   = document.getElementById('flash');
+
+  // ── Render ────────────────────────────────────────────────────────────────
+  function showPage(idx) {
+    cur = Math.max(0, Math.min(idx, pages.length - 1));
+    const p = pages[cur];
+    const ch = chapters[p.chIdx];
+
+    // Fade out
+    elFlash.classList.add('show');
+
+    setTimeout(() => {
+      elImg.src = enc(p.src);
+      elImg.onload = () => elFlash.classList.remove('show');
+      elImg.onerror = () => elFlash.classList.remove('show');
+
+      // Counter
+      elCounter.textContent = `P.${cur + 1} / ${pages.length}`;
+
+      // Badge
+      if (p.type === 'dobira') {
+        elBadge.textContent = `▪ CH.${ch.num}  ${p.tone.toUpperCase()} DOBIRA`;
+        elBadge.className = `page-type-badge badge-${p.tone}`;
+        elTone.textContent = p.tone === 'dark' ? 'DARK TONE' : 'LIGHT TONE';
+        elTone.className = `tone-pill ${p.tone}-pill`;
+      } else {
+        elBadge.textContent = `▪ CH.${ch.num}  DETAIL PAGE`;
+        elBadge.className = 'page-type-badge badge-detail';
+        elTone.textContent = 'DETAIL';
+        elTone.className = 'tone-pill';
+      }
+
+      // Nav buttons
+      elPrev.disabled = cur === 0;
+      elNext.disabled = cur === pages.length - 1;
+
+      // Progress
+      elProg.style.width = ((cur + 1) / pages.length * 100) + '%';
+
+      // Chapter bar
+      updateBar();
+
+      // Preload neighbors
+      if (cur + 1 < pages.length) preload(pages[cur + 1].src);
+      if (cur + 2 < pages.length) preload(pages[cur + 2].src);
+    }, 160);
+  }
+
+  function navigate(dir) {
+    const next = cur + dir;
+    if (next >= 0 && next < pages.length) showPage(next);
+  }
+
+  // ── Chapter Bar ───────────────────────────────────────────────────────────
+  function buildBar() {
+    const bar = document.getElementById('chapterBar');
+    chapters.forEach((ch, i) => {
+      if (i > 0) { const sep = document.createElement('div'); sep.className = 'ch-sep'; bar.appendChild(sep); }
+
+      const item = document.createElement('div');
+      item.className = 'ch-item';
+      item.id = `chi-${i}`;
+      item.innerHTML = `
+        <span class="ch-num">CH.${ch.num}</span>
+        <span class="ch-title">${ch.title}</span>
+        <div class="ch-dots">
+          <div class="dot" id="d${i}a"></div>
+          <div class="dot" id="d${i}b"></div>
+        </div>`;
+      item.onclick = () => showPage(i * 2);
+      bar.appendChild(item);
+    });
+  }
+
+  function updateBar() {
+    const p = pages[cur];
+    chapters.forEach((_, i) => {
+      document.getElementById(`chi-${i}`).classList.toggle('active', p.chIdx === i);
+      const pageA = i * 2, pageB = i * 2 + 1;
+      ['a','b'].forEach((k, j) => {
+        const dot = document.getElementById(`d${i}${k}`);
+        const pi = j === 0 ? pageA : pageB;
+        dot.className = 'dot' + (pi === cur ? ' on' : pi < cur ? ' past' : '');
+      });
+    });
+  }
+
+  // ── Keyboard & Touch ──────────────────────────────────────────────────────
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown')  navigate(1);
+    if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')    navigate(-1);
+    if (e.key === 'Home') showPage(0);
+    if (e.key === 'End')  showPage(pages.length - 1);
+  });
+
+  let tx = 0;
+  document.addEventListener('touchstart', e => { tx = e.touches[0].clientX; }, { passive: true });
+  document.addEventListener('touchend', e => {
+    const dx = e.changedTouches[0].clientX - tx;
+    if (Math.abs(dx) > 48) navigate(dx < 0 ? 1 : -1);
+  });
+
+  // ── Init ──────────────────────────────────────────────────────────────────
+  buildBar();
+  showPage(0);
+  // Preload first few pages
+  pages.slice(0, 4).forEach(p => preload(p.src));
+</script>
+</body>
+</html>
