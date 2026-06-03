@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HANROOT 2026 — 표지 시안</title>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --gold: #c9a96e;
+      --gold-dim: rgba(201,169,110,0.35);
+      --bg: #07070c;
+    }
+
+    body {
+      background: var(--bg);
+      color: #fff;
+      font-family: 'Helvetica Neue', 'Apple SD Gothic Neo', Arial, sans-serif;
+      height: 100dvh;
+      overflow: hidden;
+      user-select: none;
+    }
+
+    /* ── Header ── */
+    header {
+      position: fixed;
+      top: 0; left: 0; right: 0; z-index: 60;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 18px 40px;
+      background: linear-gradient(180deg, rgba(7,7,12,0.97) 50%, transparent);
+    }
+
+    .logo-group { display: flex; align-items: center; gap: 14px; }
+    .logo { font-size: 17px; font-weight: 800; letter-spacing: 6px; color: var(--gold); }
+    .sep  { width: 1px; height: 14px; background: var(--gold-dim); }
+    .hd-sub { font-size: 10px; letter-spacing: 3px; color: rgba(255,255,255,0.35); }
+
+    .catalog-link {
+      font-size: 10px; letter-spacing: 2px;
+      color: rgba(255,255,255,0.3);
+      text-decoration: none;
+      border: 1px solid rgba(255,255,255,0.12);
+      padding: 5px 14px; border-radius: 20px;
+      transition: all 0.2s;
+    }
+    .catalog-link:hover { color: var(--gold); border-color: var(--gold-dim); }
+
+    /* ── Stage ── */
+    .stage {
+      position: fixed; inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 68px 70px 116px;
+      gap: 24px;
+    }
+
+    /* Single image mode */
+    .img-slot {
+      position: relative;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      flex: 1;
+      min-width: 0;
+    }
+
+    .img-slot.hidden { display: none; }
+
+    .slot-label {
+      font-size: 9px;
+      letter-spacing: 3px;
+      color: rgba(255,255,255,0.25);
+      margin-bottom: 10px;
+      height: 14px;
+    }
+
+    .cover-img {
+      max-height: 100%;
+      max-width: 100%;
+      object-fit: contain;
+      border-radius: 3px;
+      box-shadow: 0 28px 80px rgba(0,0,0,0.8), 0 8px 24px rgba(0,0,0,0.45);
+      transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+    .cover-img.out { opacity: 0; transform: scale(0.97); }
+
+    /* ── Flash ── */
+    .flash {
+      position: fixed; inset: 0;
+      background: var(--bg); z-index: 55;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.18s ease;
+    }
+    .flash.show { opacity: 1; pointer-events: all; }
+
+    /* ── Nav arrows ── */
+    .nav-btn {
+      position: fixed; top: 50%; transform: translateY(-50%);
+      width: 40px; height: 40px; border-radius: 50%;
+      border: 1px solid rgba(255,255,255,0.1);
+      background: rgba(255,255,255,0.04);
+      color: rgba(255,255,255,0.4);
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: all 0.2s; z-index: 60;
+      backdrop-filter: blur(6px);
+    }
+    .nav-btn:hover:not(:disabled) { border-color: var(--gold); color: var(--gold); background: rgba(201,169,110,0.08); }
+    .nav-btn:disabled { opacity: 0.12; cursor: default; }
+    .nav-btn svg { width: 16px; height: 16px; stroke-width: 2; }
+    #btnPrev { left: 14px; }
+    #btnNext { right: 14px; }
+
+    /* ── Bottom bar ── */
+    .bottom-bar {
+      position: fixed;
+      bottom: 0; left: 0; right: 0; z-index: 60;
+      background: linear-gradient(0deg, rgba(7,7,12,0.98) 70%, transparent);
+      padding: 6px 40px 16px;
+    }
+
+    /* Front / Back toggle */
+    .view-toggle {
+      display: flex;
+      justify-content: center;
+      gap: 4px;
+      margin-bottom: 8px;
+    }
+
+    .vt-btn {
+      font-size: 9px; letter-spacing: 2px;
+      padding: 4px 16px;
+      border-radius: 20px;
+      border: 1px solid rgba(255,255,255,0.1);
+      background: transparent;
+      color: rgba(255,255,255,0.3);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .vt-btn.active {
+      border-color: var(--gold);
+      color: var(--gold);
+      background: rgba(201,169,110,0.08);
+    }
+    .vt-btn:hover:not(.active) { border-color: rgba(255,255,255,0.25); color: rgba(255,255,255,0.6); }
+    .vt-toggle-wrap { display: flex; justify-content: center; margin-bottom: 8px; }
+    #viewToggle { display: none; }
+
+    /* Option tabs */
+    .tabs {
+      display: flex;
+      justify-content: center;
+      gap: 5px;
+      margin-bottom: 8px;
+    }
+
+    .tab {
+      display: flex; flex-direction: column; align-items: center; gap: 3px;
+      padding: 7px 16px;
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s;
+      min-width: 84px;
+      background: rgba(255,255,255,0.02);
+    }
+    .tab:hover { border-color: var(--gold-dim); background: rgba(201,169,110,0.05); }
+    .tab.active { border-color: var(--gold); background: rgba(201,169,110,0.1); }
+
+    .tab-label {
+      font-size: 9px; font-weight: 700; letter-spacing: 2.5px;
+      color: var(--gold); opacity: 0.55; transition: opacity 0.2s;
+    }
+    .tab.active .tab-label { opacity: 1; }
+
+    .tab-name {
+      font-size: 8.5px; letter-spacing: 0.4px;
+      color: rgba(255,255,255,0.4); white-space: nowrap; transition: color 0.2s;
+    }
+    .tab.active .tab-name { color: rgba(255,255,255,0.8); }
+
+    /* Concept desc */
+    .concept-desc {
+      text-align: center;
+      font-size: 10px; letter-spacing: 1.5px;
+      color: rgba(255,255,255,0.22);
+      height: 16px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="flash" id="flash"></div>
+
+<header>
+  <div class="logo-group">
+    <span class="logo">HANROOT</span>
+    <span class="sep"></span>
+    <span class="hd-sub">2026 표지 시안</span>
+  </div>
+  <a class="catalog-link" href="index.html">카달로그 보기 →</a>
+</header>
+
+<div class="stage" id="stage">
+  <div class="img-slot" id="slotFront">
+    <div class="slot-label" id="labelFront"></div>
+    <img class="cover-img" id="imgFront" src="" alt="" draggable="false">
+  </div>
+  <div class="img-slot hidden" id="slotBack">
+    <div class="slot-label" id="labelBack">뒤표지</div>
+    <img class="cover-img" id="imgBack" src="" alt="" draggable="false">
+  </div>
+</div>
+
+<button class="nav-btn" id="btnPrev" onclick="move(-1)" aria-label="이전">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="15 18 9 12 15 6"/></svg>
+</button>
+<button class="nav-btn" id="btnNext" onclick="move(1)" aria-label="다음">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="9 18 15 12 9 6"/></svg>
+</button>
+
+<div class="bottom-bar">
+  <div class="vt-toggle-wrap">
+    <div id="viewToggle" style="display:flex; gap:4px;">
+      <button class="vt-btn active" id="btnFront" onclick="setView('front')">앞표지</button>
+      <button class="vt-btn"        id="btnBoth"  onclick="setView('both')">앞 + 뒤</button>
+      <button class="vt-btn"        id="btnBack"  onclick="setView('back')">뒤표지</button>
+    </div>
+  </div>
+  <div class="tabs" id="tabs"></div>
+  <div class="concept-desc" id="conceptDesc"></div>
+</div>
+
+<script>
+  const concepts = [
+    {
+      label: 'SPREAD',
+      name: '전체 스프레드',
+      desc: '앞표지 · 등 · 뒤표지 전체 레이아웃',
+      front: 'images/cover/spread.png',
+      back: null,
+    },
+    {
+      label: 'OPTION A',
+      name: 'Hero Portrait',
+      desc: '인물 클로즈업 · 권위감 · 전문성 강조',
+      front: 'images/cover/option-a.png',
+      back:  'images/cover/back-a.png',
+    },
+    {
+      label: 'OPTION B',
+      name: 'Environment',
+      desc: '건물 배경 · 현장감 · 브랜드 스케일 표현',
+      front: 'images/cover/option-b.png',
+      back:  'images/cover/back-b.png',
+    },
+    {
+      label: 'OPTION C',
+      name: 'Typographic',
+      desc: '타이포 중심 · 미니멀 · 럭셔리 감성',
+      front: 'images/cover/option-c.png',
+      back:  'images/cover/back-c.png',
+    },
+    {
+      label: 'OPTION D',
+      name: 'Material',
+      desc: '소재 디테일 · 품질 강조 · 장인 정신',
+      front: 'images/cover/option-d.png',
+      back:  'images/cover/back-d.png',
+    },
+  ];
+
+  // Preload all
+  concepts.forEach(c => {
+    [c.front, c.back].filter(Boolean).forEach(src => { const i = new Image(); i.src = src; });
+  });
+
+  let cur = 1;          // current concept index
+  let view = 'front';   // 'front' | 'back' | 'both'
+
+  const elFlash     = document.getElementById('flash');
+  const elFront     = document.getElementById('imgFront');
+  const elBack      = document.getElementById('imgBack');
+  const elSlotFront = document.getElementById('slotFront');
+  const elSlotBack  = document.getElementById('slotBack');
+  const elLabelFront= document.getElementById('labelFront');
+  const elToggle    = document.getElementById('viewToggle');
+  const elDesc      = document.getElementById('conceptDesc');
+  const btnPrev     = document.getElementById('btnPrev');
+  const btnNext     = document.getElementById('btnNext');
+
+  function setView(v) {
+    view = v;
+    ['front','both','back'].forEach(k => {
+      document.getElementById('btn' + k.charAt(0).toUpperCase() + k.slice(1))
+        .classList.toggle('active', k === v);
+    });
+    applyView();
+  }
+
+  function applyView() {
+    const c = concepts[cur];
+    const hasBack = !!c.back;
+
+    if (!hasBack || view === 'front') {
+      elSlotFront.classList.remove('hidden');
+      elSlotBack.classList.add('hidden');
+      elLabelFront.textContent = '';
+    } else if (view === 'back') {
+      elSlotFront.classList.add('hidden');
+      elSlotBack.classList.remove('hidden');
+    } else {
+      // both
+      elSlotFront.classList.remove('hidden');
+      elSlotBack.classList.remove('hidden');
+      elLabelFront.textContent = '앞표지';
+    }
+  }
+
+  function show(idx) {
+    cur = Math.max(0, Math.min(idx, concepts.length - 1));
+    const c = concepts[cur];
+    const hasBack = !!c.back;
+
+    elFlash.classList.add('show');
+    setTimeout(() => {
+      elFront.src = c.front;
+      if (hasBack) elBack.src = c.back;
+
+      Promise.all([
+        new Promise(r => { elFront.onload = elFront.onerror = r; }),
+      ]).then(() => elFlash.classList.remove('show'));
+
+      // Toggle visibility
+      elToggle.style.display = hasBack ? 'flex' : 'none';
+      if (!hasBack) view = 'front';
+      applyView();
+
+      elDesc.textContent = c.desc;
+      btnPrev.disabled = cur === 0;
+      btnNext.disabled = cur === concepts.length - 1;
+
+      document.querySelectorAll('.tab').forEach((t, i) =>
+        t.classList.toggle('active', i === cur));
+    }, 160);
+  }
+
+  function move(dir) { show(cur + dir); }
+
+  function buildTabs() {
+    const container = document.getElementById('tabs');
+    concepts.forEach((c, i) => {
+      const tab = document.createElement('div');
+      tab.className = 'tab';
+      tab.innerHTML = `<span class="tab-label">${c.label}</span><span class="tab-name">${c.name}</span>`;
+      tab.onclick = () => show(i);
+      container.appendChild(tab);
+    });
+  }
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') move(1);
+    if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')   move(-1);
+    if (e.key === '1') setView('front');
+    if (e.key === '2') setView('both');
+    if (e.key === '3') setView('back');
+  });
+
+  let tx = 0;
+  document.addEventListener('touchstart', e => { tx = e.touches[0].clientX; }, { passive: true });
+  document.addEventListener('touchend', e => {
+    const dx = e.changedTouches[0].clientX - tx;
+    if (Math.abs(dx) > 48) move(dx < 0 ? 1 : -1);
+  });
+
+  buildTabs();
+  show(1);
+</script>
+</body>
+</html>

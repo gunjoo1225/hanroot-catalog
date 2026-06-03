@@ -222,6 +222,18 @@
     }
 
     /* ── Tone Indicator ── */
+    .cover-link {
+      font-size: 10px;
+      letter-spacing: 2px;
+      color: rgba(255,255,255,0.3);
+      text-decoration: none;
+      border: 1px solid rgba(255,255,255,0.12);
+      padding: 5px 14px;
+      border-radius: 20px;
+      transition: all 0.2s;
+    }
+    .cover-link:hover { color: var(--gold); border-color: var(--gold-dim); }
+
     .tone-pill {
       font-size: 9px;
       letter-spacing: 2px;
@@ -257,6 +269,7 @@
     <span class="collection-label">2026 COLLECTION</span>
   </div>
   <div class="header-right">
+    <a class="cover-link" href="cover.html">표지 시안 →</a>
     <span class="tone-pill" id="tonePill"></span>
     <span class="page-counter" id="pageCounter"></span>
   </div>
