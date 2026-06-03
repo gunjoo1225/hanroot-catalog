@@ -221,7 +221,7 @@
       flex-shrink: 0;
     }
 
-    /* ── Tone Indicator ── */
+    /* ── Header links ── */
     .cover-link {
       font-size: 10px;
       letter-spacing: 2px;
@@ -234,17 +234,39 @@
     }
     .cover-link:hover { color: var(--gold); border-color: var(--gold-dim); }
 
-    .tone-pill {
-      font-size: 9px;
-      letter-spacing: 2px;
-      padding: 3px 10px;
-      border-radius: 20px;
+    /* ── Mode Toggle ── */
+    .mode-toggle {
+      display: flex;
+      align-items: center;
+      background: rgba(255,255,255,0.04);
       border: 1px solid rgba(255,255,255,0.1);
-      color: rgba(255,255,255,0.3);
-      transition: all 0.3s;
+      border-radius: 20px;
+      padding: 3px;
+      gap: 2px;
     }
-    .tone-pill.dark-pill  { border-color: var(--gold-dim); color: rgba(201,169,110,0.6); }
-    .tone-pill.light-pill { border-color: rgba(160,200,220,0.3); color: rgba(160,200,220,0.6); }
+
+    .mt-btn {
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 2.5px;
+      padding: 4px 16px;
+      border-radius: 16px;
+      border: none;
+      background: transparent;
+      color: rgba(255,255,255,0.3);
+      cursor: pointer;
+      transition: all 0.25s ease;
+    }
+
+    .mt-btn.active-dark {
+      background: var(--gold);
+      color: #08080d;
+    }
+
+    .mt-btn.active-light {
+      background: rgba(210,230,240,0.9);
+      color: #08080d;
+    }
 
     /* ── Loading flash ── */
     .flash {
@@ -270,7 +292,10 @@
   </div>
   <div class="header-right">
     <a class="cover-link" href="cover.html">표지 시안 →</a>
-    <span class="tone-pill" id="tonePill"></span>
+    <div class="mode-toggle">
+      <button class="mt-btn active-dark" id="btnDark"  onclick="switchMode('dark')">DARK</button>
+      <button class="mt-btn"             id="btnLight" onclick="switchMode('light')">LIGHT</button>
+    </div>
     <span class="page-counter" id="pageCounter"></span>
   </div>
 </header>
@@ -303,26 +328,52 @@
   const lightFiles = ['ch01.png','ch02.png','ch03.png','ch04.png','ch05.png','ch06.png','ch07.png','ch08.png'];
   const detailFiles= ['ch01.png','ch02.png','ch03.png','ch04.png','ch05.png','ch06.png','ch07.png','ch08.png'];
 
-  // tone: 'dark' | 'light' — which dobira to show for this chapter
   const chapters = [
-    { num:'01', title:'Security',      sub:'경비복·경찰복',    tone:'dark'  },
-    { num:'02', title:'Tactical',      sub:'특수경비·흑복',    tone:'dark'  },
-    { num:'03', title:'Business Wear', sub:'사무용 잠바·조끼', tone:'light' },
-    { num:'04', title:'Work Uniform',  sub:'산업용 작업복',    tone:'dark'  },
-    { num:'05', title:'Outerwear',     sub:'항공·방한 잠바',   tone:'light' },
-    { num:'06', title:'Pants',         sub:'바지 라인',        tone:'light' },
-    { num:'07', title:'T-Shirts',      sub:'티셔츠',           tone:'light' },
-    { num:'08', title:'Accessory',     sub:'모자·벨트·악세사리', tone:'dark' },
+    { num:'01', title:'Security',      sub:'경비복·경찰복'      },
+    { num:'02', title:'Tactical',      sub:'특수경비·흑복'      },
+    { num:'03', title:'Business Wear', sub:'사무용 잠바·조끼'   },
+    { num:'04', title:'Work Uniform',  sub:'산업용 작업복'      },
+    { num:'05', title:'Outerwear',     sub:'항공·방한 잠바'     },
+    { num:'06', title:'Pants',         sub:'바지 라인'          },
+    { num:'07', title:'T-Shirts',      sub:'티셔츠'             },
+    { num:'08', title:'Accessory',     sub:'모자·벨트·악세사리' },
   ];
 
-  // Build page list: dobira → detail for each chapter
+  // ── Mode ('dark' | 'light') ───────────────────────────────────────────────
+  let mode = 'dark';
   const pages = [];
-  chapters.forEach((ch, i) => {
-    const dobiraFile = (ch.tone === 'dark' ? DARK : LIGHT) + (ch.tone === 'dark' ? darkFiles[i] : lightFiles[i]);
-    const detailFile = DETAIL + detailFiles[i];
-    pages.push({ chIdx: i, type: 'dobira', tone: ch.tone, src: dobiraFile });
-    pages.push({ chIdx: i, type: 'detail', tone: 'neutral', src: detailFile });
-  });
+
+  function buildPages() {
+    pages.length = 0;
+    chapters.forEach((ch, i) => {
+      const fname = `ch0${i + 1}.png`;
+      pages.push({ chIdx: i, type: 'dobira', src: (mode === 'dark' ? DARK : LIGHT) + fname });
+      pages.push({ chIdx: i, type: 'detail', src: DETAIL + fname });
+    });
+  }
+
+  function switchMode(newMode) {
+    if (newMode === mode) return;
+    mode = newMode;
+
+    document.getElementById('btnDark').className  = 'mt-btn' + (mode === 'dark'  ? ' active-dark'  : '');
+    document.getElementById('btnLight').className = 'mt-btn' + (mode === 'light' ? ' active-light' : '');
+
+    const wasDobira = pages[cur]?.type === 'dobira';
+    buildPages();
+    // If on a dobira page, swap image immediately
+    if (wasDobira) {
+      elFlash.classList.add('show');
+      setTimeout(() => {
+        elImg.src = pages[cur].src;
+        elImg.onload = () => elFlash.classList.remove('show');
+        elImg.onerror = () => elFlash.classList.remove('show');
+        updateBadge();
+      }, 160);
+    }
+    // Preload all dobiras for the new mode
+    pages.filter(p => p.type === 'dobira').forEach(p => preload(p.src));
+  }
 
   // Preload cache
   const imgCache = {};
@@ -339,53 +390,45 @@
   const elImg     = document.getElementById('catalogImg');
   const elCounter = document.getElementById('pageCounter');
   const elBadge   = document.getElementById('typeBadge');
-  const elTone    = document.getElementById('tonePill');
   const elPrev    = document.getElementById('btnPrev');
   const elNext    = document.getElementById('btnNext');
   const elProg    = document.getElementById('progressBar');
   const elFlash   = document.getElementById('flash');
 
+  function updateBadge() {
+    const p  = pages[cur];
+    const ch = chapters[p.chIdx];
+    if (p.type === 'dobira') {
+      elBadge.textContent = `▪ CH.${ch.num}  ${mode.toUpperCase()} DOBIRA`;
+      elBadge.className   = `page-type-badge badge-${mode}`;
+    } else {
+      elBadge.textContent = `▪ CH.${ch.num}  DETAIL PAGE`;
+      elBadge.className   = 'page-type-badge badge-detail';
+    }
+  }
+
   // ── Render ────────────────────────────────────────────────────────────────
   function showPage(idx) {
     cur = Math.max(0, Math.min(idx, pages.length - 1));
     const p = pages[cur];
-    const ch = chapters[p.chIdx];
 
-    // Fade out
     elFlash.classList.add('show');
 
     setTimeout(() => {
-      elImg.src = enc(p.src);
+      elImg.src = p.src;
       elImg.onload = () => elFlash.classList.remove('show');
       elImg.onerror = () => elFlash.classList.remove('show');
 
-      // Counter
       elCounter.textContent = `P.${cur + 1} / ${pages.length}`;
+      updateBadge();
 
-      // Badge
-      if (p.type === 'dobira') {
-        elBadge.textContent = `▪ CH.${ch.num}  ${p.tone.toUpperCase()} DOBIRA`;
-        elBadge.className = `page-type-badge badge-${p.tone}`;
-        elTone.textContent = p.tone === 'dark' ? 'DARK TONE' : 'LIGHT TONE';
-        elTone.className = `tone-pill ${p.tone}-pill`;
-      } else {
-        elBadge.textContent = `▪ CH.${ch.num}  DETAIL PAGE`;
-        elBadge.className = 'page-type-badge badge-detail';
-        elTone.textContent = 'DETAIL';
-        elTone.className = 'tone-pill';
-      }
-
-      // Nav buttons
       elPrev.disabled = cur === 0;
       elNext.disabled = cur === pages.length - 1;
 
-      // Progress
       elProg.style.width = ((cur + 1) / pages.length * 100) + '%';
 
-      // Chapter bar
       updateBar();
 
-      // Preload neighbors
       if (cur + 1 < pages.length) preload(pages[cur + 1].src);
       if (cur + 2 < pages.length) preload(pages[cur + 2].src);
     }, 160);
@@ -446,9 +489,9 @@
   });
 
   // ── Init ──────────────────────────────────────────────────────────────────
+  buildPages();
   buildBar();
   showPage(0);
-  // Preload first few pages
   pages.slice(0, 4).forEach(p => preload(p.src));
 </script>
 </body>
