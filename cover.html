@@ -95,6 +95,31 @@
       transition: opacity 0.3s ease, transform 0.3s ease;
     }
 
+    /* ── Zoom ── */
+    .stage { overflow: hidden; }
+
+    .zoom-hint {
+      position: fixed;
+      bottom: 56px; right: 20px;
+      font-size: 9px; letter-spacing: 1.5px;
+      color: rgba(255,255,255,0.25);
+      pointer-events: none; z-index: 61;
+      transition: opacity 0.3s;
+    }
+
+    .zoom-badge {
+      position: fixed;
+      top: 68px; right: 20px;
+      font-size: 10px; letter-spacing: 1px;
+      color: var(--gold);
+      background: rgba(7,7,12,0.75);
+      border: 1px solid var(--gold-dim);
+      padding: 3px 10px; border-radius: 12px;
+      z-index: 61; opacity: 0;
+      transition: opacity 0.3s;
+      pointer-events: none;
+    }
+
     /* ── Flash ── */
     .flash {
       position: fixed; inset: 0; background: var(--bg);
@@ -162,6 +187,8 @@
 </head>
 <body>
 
+<div class="zoom-hint" id="zoomHint">스크롤로 확대 · 드래그로 이동 · ESC 초기화</div>
+<div class="zoom-badge" id="zoomBadge"></div>
 <div class="flash" id="flash"></div>
 
 <header>
@@ -334,7 +361,7 @@
     else apply();
   }
 
-  function show(idx) { cur = Math.max(0, Math.min(idx, concepts.length - 1)); render(true); }
+  function show(idx) { cur = Math.max(0, Math.min(idx, concepts.length - 1)); resetZoom(); render(true); }
   function move(dir) { show(cur + dir); }
 
   // ── Tabs ──────────────────────────────────────────────────────────────────
@@ -349,8 +376,69 @@
     });
   }
 
+  // ── Zoom & Pan ────────────────────────────────────────────────────────────
+  let zoom = 1, panX = 0, panY = 0;
+  const elStage     = document.getElementById('stage');
+  const elZoomBadge = document.getElementById('zoomBadge');
+  const elZoomHint  = document.getElementById('zoomHint');
+  let zoomBadgeTimer = null;
+
+  function applyTransform() {
+    elStage.style.transform = `translate(${panX}px, ${panY}px) scale(${zoom})`;
+    elStage.style.transformOrigin = 'center center';
+    elStage.style.cursor = zoom > 1 ? 'grab' : 'default';
+  }
+
+  function showZoomBadge() {
+    if (zoom <= 1) { elZoomBadge.style.opacity = '0'; return; }
+    elZoomBadge.textContent = `× ${zoom.toFixed(1)}`;
+    elZoomBadge.style.opacity = '1';
+    clearTimeout(zoomBadgeTimer);
+    zoomBadgeTimer = setTimeout(() => { elZoomBadge.style.opacity = '0'; }, 1200);
+  }
+
+  function resetZoom() {
+    zoom = 1; panX = 0; panY = 0;
+    applyTransform();
+    elZoomBadge.style.opacity = '0';
+  }
+
+  document.querySelector('.stage').addEventListener('wheel', e => {
+    e.preventDefault();
+    const factor = e.deltaY < 0 ? 1.12 : 0.89;
+    zoom = Math.min(6, Math.max(1, zoom * factor));
+    if (zoom <= 1.05) { zoom = 1; panX = 0; panY = 0; }
+    applyTransform();
+    showZoomBadge();
+    elZoomHint.style.opacity = zoom > 1 ? '0' : '0.6';
+  }, { passive: false });
+
+  let dragging = false, dragStartX = 0, dragStartY = 0;
+  elStage.addEventListener('mousedown', e => {
+    if (zoom <= 1) return;
+    dragging = true;
+    dragStartX = e.clientX - panX;
+    dragStartY = e.clientY - panY;
+    elStage.style.cursor = 'grabbing';
+    e.preventDefault();
+  });
+  document.addEventListener('mousemove', e => {
+    if (!dragging) return;
+    panX = e.clientX - dragStartX;
+    panY = e.clientY - dragStartY;
+    applyTransform();
+  });
+  document.addEventListener('mouseup', () => {
+    if (!dragging) return;
+    dragging = false;
+    elStage.style.cursor = zoom > 1 ? 'grab' : 'default';
+  });
+  elStage.addEventListener('dblclick', resetZoom);
+
   // ── Keyboard & Touch ──────────────────────────────────────────────────────
   document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') { resetZoom(); return; }
+    if (zoom > 1) return;
     if (e.key === 'ArrowRight' || e.key === 'ArrowDown') move(1);
     if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')   move(-1);
     if (e.key === 'd' || e.key === 'D') switchMode('dark');
@@ -370,6 +458,7 @@
   // ── Init ──────────────────────────────────────────────────────────────────
   buildTabs();
   show(1);
+  setTimeout(() => { elZoomHint.style.opacity = '0.5'; }, 800);
 </script>
 </body>
 </html>
