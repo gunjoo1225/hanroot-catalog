@@ -36,7 +36,7 @@
     .logo-group { display: flex; align-items: center; gap: 14px; }
     .logo { font-size: 17px; font-weight: 800; letter-spacing: 6px; color: var(--gold); }
     .logo-sep { width: 1px; height: 14px; background: var(--gold-dim); }
-    .collection-label { font-size: 10px; letter-spacing: 3px; color: rgba(255,255,255,0.35); }
+    .collection-label { font-size: 10px; letter-spacing: 3px; color: rgba(255,255,255,0.55); }
 
     .header-right { display: flex; align-items: center; gap: 14px; }
 
@@ -74,7 +74,7 @@
     }
     .section-sub {
       font-size: 11px; letter-spacing: 1.5px;
-      color: rgba(255,255,255,0.3);
+      color: rgba(255,255,255,0.55);
     }
     .divider {
       width: 40px; height: 1px;
@@ -89,43 +89,34 @@
     }
     .brand-tag {
       font-size: 9px; letter-spacing: 2px;
-      color: rgba(255,255,255,0.4);
-      border: 1px solid rgba(255,255,255,0.1);
+      color: rgba(255,255,255,0.70);
+      border: 1px solid rgba(255,255,255,0.18);
       padding: 4px 12px; border-radius: 20px;
     }
 
-    /* ── Model grid ── */
-    .model-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 28px;
+    /* ── Model section (one per model) ── */
+    .model-section {
+      margin-bottom: 60px;
     }
+    .model-section:last-child { margin-bottom: 0; }
 
-    @media (max-width: 900px) {
-      .model-grid { grid-template-columns: 1fr; }
-    }
-
-    /* ── Model card ── */
-    .model-card {
-      background: rgba(255,255,255,0.03);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 8px;
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      transition: border-color 0.3s;
-    }
-    .model-card:hover { border-color: rgba(201,169,110,0.35); }
-
-    .card-top {
+    /* ── Profile row ── */
+    .profile-row {
       display: flex;
       gap: 0;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-bottom: none;
+      border-radius: 8px 8px 0 0;
+      overflow: hidden;
+      transition: border-color 0.3s;
     }
+    .model-section:hover .profile-row { border-color: rgba(201,169,110,0.30); }
 
     /* ── Model photo ── */
     .model-photo-wrap {
-      width: 220px;
-      min-width: 220px;
+      width: 200px;
+      min-width: 200px;
       position: relative;
       overflow: hidden;
       background: rgba(0,0,0,0.3);
@@ -138,7 +129,7 @@
       display: block;
       transition: transform 0.5s ease;
     }
-    .model-card:hover .model-photo-wrap img { transform: scale(1.03); }
+    .model-section:hover .model-photo-wrap img { transform: scale(1.03); }
 
     .model-id-badge {
       position: absolute;
@@ -155,8 +146,8 @@
       position: absolute;
       bottom: 12px; left: 12px;
       font-size: 8px; letter-spacing: 2px;
-      color: rgba(255,255,255,0.55);
-      background: rgba(8,8,13,0.65);
+      color: rgba(255,255,255,0.75);
+      background: rgba(8,8,13,0.70);
       padding: 3px 8px; border-radius: 3px;
     }
 
@@ -180,27 +171,24 @@
     }
     .model-role-sub {
       font-size: 9px; letter-spacing: 1.5px;
-      color: rgba(255,255,255,0.35);
+      color: rgba(255,255,255,0.60);
     }
 
-    /* Keywords */
     .info-block { display: flex; flex-direction: column; gap: 6px; }
     .info-label {
       font-size: 8px; font-weight: 700; letter-spacing: 2.5px;
-      color: var(--gold); opacity: 0.65;
+      color: var(--gold); opacity: 0.90;
     }
     .keyword-list {
       display: flex; flex-wrap: wrap; gap: 5px;
     }
     .kw-tag {
       font-size: 9px; letter-spacing: 0.5px;
-      color: rgba(255,255,255,0.55);
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.1);
+      color: rgba(255,255,255,0.82);
+      background: rgba(255,255,255,0.09);
+      border: 1px solid rgba(255,255,255,0.20);
       padding: 3px 9px; border-radius: 3px;
     }
-
-    /* Chapter tags */
     .ch-tag {
       font-size: 9px; font-weight: 700; letter-spacing: 1px;
       color: #08080d;
@@ -208,28 +196,197 @@
       padding: 3px 10px; border-radius: 3px;
     }
 
-    /* ── Card bottom: cuts ── */
-    .card-cuts {
-      padding: 14px 22px;
-      border-top: 1px solid rgba(255,255,255,0.06);
-      background: rgba(0,0,0,0.2);
+    /* ── Cuts meta bar ── */
+    .cuts-meta {
+      padding: 12px 22px;
+      background: rgba(0,0,0,0.18);
+      border-left: 1px solid rgba(255,255,255,0.08);
+      border-right: 1px solid rgba(255,255,255,0.08);
+      display: flex;
+      align-items: center;
+      gap: 10px;
     }
     .cuts-label {
       font-size: 8px; font-weight: 700; letter-spacing: 2.5px;
-      color: rgba(255,255,255,0.25);
-      margin-bottom: 7px;
+      color: rgba(255,255,255,0.50);
+      white-space: nowrap;
     }
     .cuts-list {
       display: flex; flex-wrap: wrap; gap: 5px;
     }
     .cut-item {
       font-size: 9px; letter-spacing: 0.4px;
-      color: rgba(255,255,255,0.4);
+      color: rgba(255,255,255,0.65);
     }
     .cut-item + .cut-item::before {
       content: '·';
       margin-right: 5px;
       opacity: 0.4;
+    }
+
+    /* ── Photo gallery strip ── */
+    .photo-strip {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 3px;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-top: none;
+      border-radius: 0 0 8px 8px;
+      overflow: hidden;
+      background: rgba(0,0,0,0.3);
+    }
+
+    .strip-thumb {
+      position: relative;
+      aspect-ratio: 2/3;
+      overflow: hidden;
+      cursor: pointer;
+      background: rgba(255,255,255,0.03);
+    }
+    .strip-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: top center;
+      display: block;
+      transition: transform 0.4s ease, filter 0.3s;
+      filter: brightness(0.88);
+    }
+    .strip-thumb:hover img {
+      transform: scale(1.06);
+      filter: brightness(1);
+    }
+    .strip-thumb .cut-num {
+      position: absolute;
+      bottom: 6px; right: 7px;
+      font-size: 9px; font-weight: 700; letter-spacing: 1px;
+      color: rgba(255,255,255,0.55);
+      background: rgba(8,8,13,0.60);
+      padding: 2px 6px; border-radius: 2px;
+      backdrop-filter: blur(3px);
+    }
+    .strip-thumb .zoom-icon {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%,-50%) scale(0);
+      opacity: 0;
+      font-size: 22px;
+      color: rgba(255,255,255,0.9);
+      transition: transform 0.25s, opacity 0.25s;
+      pointer-events: none;
+    }
+    .strip-thumb:hover .zoom-icon {
+      transform: translate(-50%,-50%) scale(1);
+      opacity: 1;
+    }
+
+    /* ── Lightbox ── */
+    .lightbox {
+      display: none;
+      position: fixed;
+      inset: 0; z-index: 200;
+    }
+    .lightbox.open { display: flex; align-items: center; justify-content: center; }
+
+    .lb-backdrop {
+      position: absolute;
+      inset: 0;
+      background: rgba(4,4,8,0.93);
+      backdrop-filter: blur(8px);
+    }
+
+    .lb-content {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      max-height: 92dvh;
+    }
+
+    #lb-img {
+      max-height: 88dvh;
+      max-width: 55vw;
+      border-radius: 4px;
+      object-fit: contain;
+      display: block;
+      box-shadow: 0 0 60px rgba(0,0,0,0.7);
+    }
+
+    .lb-side {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      min-width: 220px;
+      max-width: 260px;
+    }
+
+    .lb-model-label {
+      font-size: 11px; font-weight: 800; letter-spacing: 4px;
+      color: var(--gold);
+    }
+    .lb-cut-label {
+      font-size: 9px; letter-spacing: 2px;
+      color: rgba(255,255,255,0.45);
+    }
+
+    .lb-thumbs {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 5px;
+    }
+    .lb-thumb {
+      aspect-ratio: 2/3;
+      overflow: hidden;
+      border-radius: 3px;
+      cursor: pointer;
+      border: 1px solid transparent;
+      transition: border-color 0.2s;
+    }
+    .lb-thumb.active { border-color: var(--gold); }
+    .lb-thumb img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      object-position: top center;
+      display: block;
+    }
+
+    .lb-nav {
+      display: flex; gap: 8px; margin-top: 4px;
+    }
+    .lb-btn {
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.15);
+      color: #fff;
+      font-size: 16px;
+      width: 36px; height: 36px;
+      border-radius: 4px;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.2s, border-color 0.2s;
+    }
+    .lb-btn:hover { background: rgba(201,169,110,0.15); border-color: var(--gold-dim); }
+
+    .lb-close-btn {
+      position: absolute;
+      top: -44px; right: 0;
+      background: none;
+      border: 1px solid rgba(255,255,255,0.15);
+      color: rgba(255,255,255,0.6);
+      font-size: 18px;
+      width: 32px; height: 32px;
+      border-radius: 4px;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: color 0.2s, border-color 0.2s;
+    }
+    .lb-close-btn:hover { color: #fff; border-color: rgba(255,255,255,0.35); }
+
+    @media (max-width: 900px) {
+      .photo-strip { grid-template-columns: repeat(3, 1fr); }
+      .model-photo-wrap { width: 140px; min-width: 140px; }
+      #lb-img { max-width: 90vw; }
+      .lb-side { display: none; }
     }
   </style>
 </head>
@@ -268,212 +425,325 @@
     <span class="brand-tag">고급 카탈로그</span>
   </div>
 
-  <div class="model-grid">
-
-    <!-- M1 -->
-    <div class="model-card">
-      <div class="card-top">
-        <div class="model-photo-wrap">
-          <img src="images/models/M1.png" alt="Model M1">
-          <div class="model-id-badge">M1</div>
-          <div class="gender-badge">남성 · 30대 초중반</div>
-        </div>
-        <div class="card-info">
-          <div class="model-role">
-            <div class="model-role-main">메인 히어로<br>Security 대표 모델</div>
-            <div class="model-role-sub">MAIN HERO · AUTHORITY</div>
-          </div>
-          <div class="info-block">
-            <div class="info-label">인상 키워드</div>
-            <div class="keyword-list">
-              <span class="kw-tag">차분한 카리스마</span>
-              <span class="kw-tag">책임감</span>
-              <span class="kw-tag">리더십</span>
-              <span class="kw-tag">신뢰감</span>
-            </div>
-          </div>
-          <div class="info-block">
-            <div class="info-label">담당 챕터</div>
-            <div class="keyword-list">
-              <span class="ch-tag">CH.01 Security</span>
-              <span class="ch-tag">CH.02 Tactical</span>
-              <span class="ch-tag">CH.05 Outerwear</span>
-            </div>
-          </div>
-          <div class="info-block">
-            <div class="info-label">체형 · 스타일</div>
-            <div class="keyword-list">
-              <span class="kw-tag">키 크고 균형 잡힌 체형</span>
-              <span class="kw-tag">짧은 단정 블랙 헤어</span>
-              <span class="kw-tag">미소 적은 절제된 자신감</span>
-            </div>
-          </div>
-        </div>
+  <!-- ═══════════════ M1 ═══════════════ -->
+  <div class="model-section">
+    <div class="profile-row">
+      <div class="model-photo-wrap">
+        <img src="images/models/M1.png" alt="Model M1">
+        <div class="model-id-badge">M1</div>
+        <div class="gender-badge">남성 · 30대 초중반</div>
       </div>
-      <div class="card-cuts">
-        <div class="cuts-label">주요 컷</div>
-        <div class="cuts-list">
-          <span class="cut-item">표지</span>
-          <span class="cut-item">SECURITY 도비라</span>
-          <span class="cut-item">경비복 메인컷</span>
-          <span class="cut-item">아우터 히어로컷</span>
+      <div class="card-info">
+        <div class="model-role">
+          <div class="model-role-main">메인 히어로<br>Security 대표 모델</div>
+          <div class="model-role-sub">MAIN HERO · AUTHORITY</div>
+        </div>
+        <div class="info-block">
+          <div class="info-label">인상 키워드</div>
+          <div class="keyword-list">
+            <span class="kw-tag">차분한 카리스마</span>
+            <span class="kw-tag">책임감</span>
+            <span class="kw-tag">리더십</span>
+            <span class="kw-tag">신뢰감</span>
+          </div>
+        </div>
+        <div class="info-block">
+          <div class="info-label">담당 챕터</div>
+          <div class="keyword-list">
+            <span class="ch-tag">CH.01 Security</span>
+            <span class="ch-tag">CH.02 Tactical</span>
+            <span class="ch-tag">CH.05 Outerwear</span>
+          </div>
+        </div>
+        <div class="info-block">
+          <div class="info-label">체형 · 스타일</div>
+          <div class="keyword-list">
+            <span class="kw-tag">키 크고 균형 잡힌 체형</span>
+            <span class="kw-tag">짧은 단정 블랙 헤어</span>
+            <span class="kw-tag">미소 적은 절제된 자신감</span>
+          </div>
         </div>
       </div>
     </div>
-
-    <!-- M2 -->
-    <div class="model-card">
-      <div class="card-top">
-        <div class="model-photo-wrap">
-          <img src="images/models/M2.png" alt="Model M2">
-          <div class="model-id-badge">M2</div>
-          <div class="gender-badge">남성 · 30대 초반</div>
-        </div>
-        <div class="card-info">
-          <div class="model-role">
-            <div class="model-role-main">실무형 스마트<br>Work &amp; Business 확장형</div>
-            <div class="model-role-sub">PRACTICAL · SMART</div>
-          </div>
-          <div class="info-block">
-            <div class="info-label">인상 키워드</div>
-            <div class="keyword-list">
-              <span class="kw-tag">스마트함</span>
-              <span class="kw-tag">친근한 신뢰감</span>
-              <span class="kw-tag">실무형 안정감</span>
-            </div>
-          </div>
-          <div class="info-block">
-            <div class="info-label">담당 챕터</div>
-            <div class="keyword-list">
-              <span class="ch-tag">CH.03 Business Wear</span>
-              <span class="ch-tag">CH.04 Work Uniform</span>
-              <span class="ch-tag">CH.06 Pants</span>
-              <span class="ch-tag">CH.07 T-Shirts</span>
-            </div>
-          </div>
-          <div class="info-block">
-            <div class="info-label">체형 · 스타일</div>
-            <div class="keyword-list">
-              <span class="kw-tag">중간~큰 키</span>
-              <span class="kw-tag">깔끔한 텍스처 헤어</span>
-              <span class="kw-tag">부담 없는 진지함</span>
-            </div>
-          </div>
-        </div>
+    <div class="cuts-meta">
+      <div class="cuts-label">주요 컷</div>
+      <div class="cuts-list">
+        <span class="cut-item">표지</span>
+        <span class="cut-item">SECURITY 도비라</span>
+        <span class="cut-item">경비복 메인컷</span>
+        <span class="cut-item">아우터 히어로컷</span>
       </div>
-      <div class="card-cuts">
-        <div class="cuts-label">주요 컷</div>
-        <div class="cuts-list">
-          <span class="cut-item">작업복</span>
-          <span class="cut-item">사무용 점퍼</span>
-          <span class="cut-item">바지 핏</span>
-          <span class="cut-item">활동 컷</span>
+    </div>
+    <div class="photo-strip" data-model="M1">
+      <div class="strip-thumb" data-idx="0"><img src="images/models/M1-1.png" alt="M1 컷 1"><span class="cut-num">01</span><span class="zoom-icon">⊕</span></div>
+      <div class="strip-thumb" data-idx="1"><img src="images/models/M1-2.png" alt="M1 컷 2"><span class="cut-num">02</span><span class="zoom-icon">⊕</span></div>
+      <div class="strip-thumb" data-idx="2"><img src="images/models/M1-3.png" alt="M1 컷 3"><span class="cut-num">03</span><span class="zoom-icon">⊕</span></div>
+      <div class="strip-thumb" data-idx="3"><img src="images/models/M1-4.png" alt="M1 컷 4"><span class="cut-num">04</span><span class="zoom-icon">⊕</span></div>
+      <div class="strip-thumb" data-idx="4"><img src="images/models/M1-5.png" alt="M1 컷 5"><span class="cut-num">05</span><span class="zoom-icon">⊕</span></div>
+      <div class="strip-thumb" data-idx="5"><img src="images/models/M1-6.png" alt="M1 컷 6"><span class="cut-num">06</span><span class="zoom-icon">⊕</span></div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ M2 ═══════════════ -->
+  <div class="model-section">
+    <div class="profile-row">
+      <div class="model-photo-wrap">
+        <img src="images/models/M2.png" alt="Model M2">
+        <div class="model-id-badge">M2</div>
+        <div class="gender-badge">남성 · 30대 초반</div>
+      </div>
+      <div class="card-info">
+        <div class="model-role">
+          <div class="model-role-main">실무형 스마트<br>Work &amp; Business 확장형</div>
+          <div class="model-role-sub">PRACTICAL · SMART</div>
+        </div>
+        <div class="info-block">
+          <div class="info-label">인상 키워드</div>
+          <div class="keyword-list">
+            <span class="kw-tag">스마트함</span>
+            <span class="kw-tag">친근한 신뢰감</span>
+            <span class="kw-tag">실무형 안정감</span>
+          </div>
+        </div>
+        <div class="info-block">
+          <div class="info-label">담당 챕터</div>
+          <div class="keyword-list">
+            <span class="ch-tag">CH.03 Business Wear</span>
+            <span class="ch-tag">CH.04 Work Uniform</span>
+            <span class="ch-tag">CH.06 Pants</span>
+            <span class="ch-tag">CH.07 T-Shirts</span>
+          </div>
+        </div>
+        <div class="info-block">
+          <div class="info-label">체형 · 스타일</div>
+          <div class="keyword-list">
+            <span class="kw-tag">중간~큰 키</span>
+            <span class="kw-tag">깔끔한 텍스처 헤어</span>
+            <span class="kw-tag">부담 없는 진지함</span>
+          </div>
         </div>
       </div>
     </div>
-
-    <!-- F1 -->
-    <div class="model-card">
-      <div class="card-top">
-        <div class="model-photo-wrap">
-          <img src="images/models/F1.png" alt="Model F1">
-          <div class="model-id-badge">F1</div>
-          <div class="gender-badge">여성 · 20대 후반~30대 초반</div>
-        </div>
-        <div class="card-info">
-          <div class="model-role">
-            <div class="model-role-main">여성 메인 대표<br>Security &amp; Business</div>
-            <div class="model-role-sub">FEMALE MAIN · PROFESSIONAL</div>
-          </div>
-          <div class="info-block">
-            <div class="info-label">인상 키워드</div>
-            <div class="keyword-list">
-              <span class="kw-tag">당당함</span>
-              <span class="kw-tag">단정함</span>
-              <span class="kw-tag">세련된 전문성</span>
-              <span class="kw-tag">신뢰감</span>
-            </div>
-          </div>
-          <div class="info-block">
-            <div class="info-label">담당 챕터</div>
-            <div class="keyword-list">
-              <span class="ch-tag">CH.01 Security</span>
-              <span class="ch-tag">CH.03 Business Wear</span>
-            </div>
-          </div>
-          <div class="info-block">
-            <div class="info-label">체형 · 스타일</div>
-            <div class="keyword-list">
-              <span class="kw-tag">슬림하고 균형 잡힌 체형</span>
-              <span class="kw-tag">로우 포니테일</span>
-              <span class="kw-tag">차분하고 또렷한 시선</span>
-            </div>
-          </div>
-        </div>
+    <div class="cuts-meta">
+      <div class="cuts-label">주요 컷</div>
+      <div class="cuts-list">
+        <span class="cut-item">작업복</span>
+        <span class="cut-item">사무용 점퍼</span>
+        <span class="cut-item">바지 핏</span>
+        <span class="cut-item">활동 컷</span>
       </div>
-      <div class="card-cuts">
-        <div class="cuts-label">주요 컷</div>
-        <div class="cuts-list">
-          <span class="cut-item">여성 경비복</span>
-          <span class="cut-item">비즈니스웨어</span>
-          <span class="cut-item">남녀 페어컷</span>
+    </div>
+    <div class="photo-strip" data-model="M2">
+      <div class="strip-thumb" data-idx="0"><img src="images/models/M2-1.png" alt="M2 컷 1"><span class="cut-num">01</span><span class="zoom-icon">⊕</span></div>
+      <div class="strip-thumb" data-idx="1"><img src="images/models/M2-2.png" alt="M2 컷 2"><span class="cut-num">02</span><span class="zoom-icon">⊕</span></div>
+      <div class="strip-thumb" data-idx="2"><img src="images/models/M2-3.png" alt="M2 컷 3"><span class="cut-num">03</span><span class="zoom-icon">⊕</span></div>
+      <div class="strip-thumb" data-idx="3"><img src="images/models/M2-4.png" alt="M2 컷 4"><span class="cut-num">04</span><span class="zoom-icon">⊕</span></div>
+      <div class="strip-thumb" data-idx="4"><img src="images/models/M2-5.png" alt="M2 컷 5"><span class="cut-num">05</span><span class="zoom-icon">⊕</span></div>
+      <div class="strip-thumb" data-idx="5"><img src="images/models/M2-6.png" alt="M2 컷 6"><span class="cut-num">06</span><span class="zoom-icon">⊕</span></div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ F1 ═══════════════ -->
+  <div class="model-section">
+    <div class="profile-row">
+      <div class="model-photo-wrap">
+        <img src="images/models/F1.png" alt="Model F1">
+        <div class="model-id-badge">F1</div>
+        <div class="gender-badge">여성 · 20대 후반~30대 초반</div>
+      </div>
+      <div class="card-info">
+        <div class="model-role">
+          <div class="model-role-main">여성 메인 대표<br>Security &amp; Business</div>
+          <div class="model-role-sub">FEMALE MAIN · PROFESSIONAL</div>
+        </div>
+        <div class="info-block">
+          <div class="info-label">인상 키워드</div>
+          <div class="keyword-list">
+            <span class="kw-tag">당당함</span>
+            <span class="kw-tag">단정함</span>
+            <span class="kw-tag">세련된 전문성</span>
+            <span class="kw-tag">신뢰감</span>
+          </div>
+        </div>
+        <div class="info-block">
+          <div class="info-label">담당 챕터</div>
+          <div class="keyword-list">
+            <span class="ch-tag">CH.01 Security</span>
+            <span class="ch-tag">CH.03 Business Wear</span>
+          </div>
+        </div>
+        <div class="info-block">
+          <div class="info-label">체형 · 스타일</div>
+          <div class="keyword-list">
+            <span class="kw-tag">슬림하고 균형 잡힌 체형</span>
+            <span class="kw-tag">로우 포니테일</span>
+            <span class="kw-tag">차분하고 또렷한 시선</span>
+          </div>
         </div>
       </div>
     </div>
-
-    <!-- F2 -->
-    <div class="model-card">
-      <div class="card-top">
-        <div class="model-photo-wrap">
-          <img src="images/models/F2.png" alt="Model F2">
-          <div class="model-id-badge">F2</div>
-          <div class="gender-badge">여성 · 20대 후반~30대 초반</div>
-        </div>
-        <div class="card-info">
-          <div class="model-role">
-            <div class="model-role-main">도시적 세련미<br>Light Business &amp; Casual 확장형</div>
-            <div class="model-role-sub">URBAN CHIC · APPROACHABLE</div>
-          </div>
-          <div class="info-block">
-            <div class="info-label">인상 키워드</div>
-            <div class="keyword-list">
-              <span class="kw-tag">부드러운 전문성</span>
-              <span class="kw-tag">도시적 세련미</span>
-              <span class="kw-tag">호감형</span>
-            </div>
-          </div>
-          <div class="info-block">
-            <div class="info-label">담당 챕터</div>
-            <div class="keyword-list">
-              <span class="ch-tag">CH.03 Business Wear</span>
-              <span class="ch-tag">CH.05 Outerwear</span>
-              <span class="ch-tag">CH.07 T-Shirts</span>
-              <span class="ch-tag">CH.08 Accessory</span>
-            </div>
-          </div>
-          <div class="info-block">
-            <div class="info-label">체형 · 스타일</div>
-            <div class="keyword-list">
-              <span class="kw-tag">슬림~자연스러운 균형형</span>
-              <span class="kw-tag">어깨선 길이 헤어</span>
-              <span class="kw-tag">은은한 미소</span>
-            </div>
-          </div>
-        </div>
+    <div class="cuts-meta">
+      <div class="cuts-label">주요 컷</div>
+      <div class="cuts-list">
+        <span class="cut-item">여성 경비복</span>
+        <span class="cut-item">비즈니스웨어</span>
+        <span class="cut-item">남녀 페어컷</span>
       </div>
-      <div class="card-cuts">
-        <div class="cuts-label">주요 컷</div>
-        <div class="cuts-list">
-          <span class="cut-item">사무복</span>
-          <span class="cut-item">티셔츠</span>
-          <span class="cut-item">액세서리</span>
-          <span class="cut-item">밝은 표지 보조컷</span>
+    </div>
+    <div class="photo-strip" data-model="F1">
+      <div class="strip-thumb" data-idx="0"><img src="images/models/F1-1.png" alt="F1 컷 1"><span class="cut-num">01</span><span class="zoom-icon">⊕</span></div>
+      <div class="strip-thumb" data-idx="1"><img src="images/models/F1-2.png" alt="F1 컷 2"><span class="cut-num">02</span><span class="zoom-icon">⊕</span></div>
+      <div class="strip-thumb" data-idx="2"><img src="images/models/F1-3.png" alt="F1 컷 3"><span class="cut-num">03</span><span class="zoom-icon">⊕</span></div>
+      <div class="strip-thumb" data-idx="3"><img src="images/models/F1-4.png" alt="F1 컷 4"><span class="cut-num">04</span><span class="zoom-icon">⊕</span></div>
+      <div class="strip-thumb" data-idx="4"><img src="images/models/F1-5.png" alt="F1 컷 5"><span class="cut-num">05</span><span class="zoom-icon">⊕</span></div>
+      <div class="strip-thumb" data-idx="5"><img src="images/models/F1-6.png" alt="F1 컷 6"><span class="cut-num">06</span><span class="zoom-icon">⊕</span></div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ F2 ═══════════════ -->
+  <div class="model-section">
+    <div class="profile-row">
+      <div class="model-photo-wrap">
+        <img src="images/models/F2.png" alt="Model F2">
+        <div class="model-id-badge">F2</div>
+        <div class="gender-badge">여성 · 20대 후반~30대 초반</div>
+      </div>
+      <div class="card-info">
+        <div class="model-role">
+          <div class="model-role-main">도시적 세련미<br>Light Business &amp; Casual 확장형</div>
+          <div class="model-role-sub">URBAN CHIC · APPROACHABLE</div>
+        </div>
+        <div class="info-block">
+          <div class="info-label">인상 키워드</div>
+          <div class="keyword-list">
+            <span class="kw-tag">부드러운 전문성</span>
+            <span class="kw-tag">도시적 세련미</span>
+            <span class="kw-tag">호감형</span>
+          </div>
+        </div>
+        <div class="info-block">
+          <div class="info-label">담당 챕터</div>
+          <div class="keyword-list">
+            <span class="ch-tag">CH.03 Business Wear</span>
+            <span class="ch-tag">CH.05 Outerwear</span>
+            <span class="ch-tag">CH.07 T-Shirts</span>
+            <span class="ch-tag">CH.08 Accessory</span>
+          </div>
+        </div>
+        <div class="info-block">
+          <div class="info-label">체형 · 스타일</div>
+          <div class="keyword-list">
+            <span class="kw-tag">슬림~자연스러운 균형형</span>
+            <span class="kw-tag">어깨선 길이 헤어</span>
+            <span class="kw-tag">은은한 미소</span>
+          </div>
         </div>
       </div>
     </div>
+    <div class="cuts-meta">
+      <div class="cuts-label">주요 컷</div>
+      <div class="cuts-list">
+        <span class="cut-item">사무복</span>
+        <span class="cut-item">티셔츠</span>
+        <span class="cut-item">액세서리</span>
+        <span class="cut-item">밝은 표지 보조컷</span>
+      </div>
+    </div>
+    <div class="photo-strip" data-model="F2">
+      <div class="strip-thumb" data-idx="0"><img src="images/models/F2-1.png" alt="F2 컷 1"><span class="cut-num">01</span><span class="zoom-icon">⊕</span></div>
+      <div class="strip-thumb" data-idx="1"><img src="images/models/F2-2.png" alt="F2 컷 2"><span class="cut-num">02</span><span class="zoom-icon">⊕</span></div>
+      <div class="strip-thumb" data-idx="2"><img src="images/models/F2-3.png" alt="F2 컷 3"><span class="cut-num">03</span><span class="zoom-icon">⊕</span></div>
+      <div class="strip-thumb" data-idx="3"><img src="images/models/F2-4.png" alt="F2 컷 4"><span class="cut-num">04</span><span class="zoom-icon">⊕</span></div>
+      <div class="strip-thumb" data-idx="4"><img src="images/models/F2-5.png" alt="F2 컷 5"><span class="cut-num">05</span><span class="zoom-icon">⊕</span></div>
+      <div class="strip-thumb" data-idx="5"><img src="images/models/F2-6.png" alt="F2 컷 6"><span class="cut-num">06</span><span class="zoom-icon">⊕</span></div>
+    </div>
+  </div>
 
+</div>
+
+<!-- ── Lightbox ── -->
+<div class="lightbox" id="lightbox">
+  <div class="lb-backdrop" id="lb-backdrop"></div>
+  <div class="lb-content">
+    <button class="lb-close-btn" id="lb-close">✕</button>
+    <img id="lb-img" src="" alt="">
+    <div class="lb-side">
+      <div>
+        <div class="lb-model-label" id="lb-model-label">M1</div>
+        <div class="lb-cut-label" id="lb-cut-label">CUT 01 / 06</div>
+      </div>
+      <div class="lb-thumbs" id="lb-thumbs"></div>
+      <div class="lb-nav">
+        <button class="lb-btn" id="lb-prev">‹</button>
+        <button class="lb-btn" id="lb-next">›</button>
+      </div>
+    </div>
   </div>
 </div>
+
+<script>
+  const lb = document.getElementById('lightbox');
+  const lbImg = document.getElementById('lb-img');
+  const lbModel = document.getElementById('lb-model-label');
+  const lbCut = document.getElementById('lb-cut-label');
+  const lbThumbs = document.getElementById('lb-thumbs');
+
+  let currentSrcs = [];
+  let currentIdx = 0;
+
+  function openLightbox(modelId, idx, srcs) {
+    currentSrcs = srcs;
+    currentIdx = idx;
+    lbModel.textContent = modelId;
+    renderLb();
+    lb.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function renderLb() {
+    lbImg.src = currentSrcs[currentIdx];
+    lbCut.textContent = `CUT ${String(currentIdx + 1).padStart(2,'0')} / ${String(currentSrcs.length).padStart(2,'0')}`;
+    lbThumbs.innerHTML = '';
+    currentSrcs.forEach((src, i) => {
+      const d = document.createElement('div');
+      d.className = 'lb-thumb' + (i === currentIdx ? ' active' : '');
+      d.innerHTML = `<img src="${src}" alt="">`;
+      d.addEventListener('click', () => { currentIdx = i; renderLb(); });
+      lbThumbs.appendChild(d);
+    });
+  }
+
+  function closeLightbox() {
+    lb.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  document.getElementById('lb-close').addEventListener('click', closeLightbox);
+  document.getElementById('lb-backdrop').addEventListener('click', closeLightbox);
+  document.getElementById('lb-prev').addEventListener('click', () => {
+    currentIdx = (currentIdx - 1 + currentSrcs.length) % currentSrcs.length;
+    renderLb();
+  });
+  document.getElementById('lb-next').addEventListener('click', () => {
+    currentIdx = (currentIdx + 1) % currentSrcs.length;
+    renderLb();
+  });
+  document.addEventListener('keydown', e => {
+    if (!lb.classList.contains('open')) return;
+    if (e.key === 'Escape') closeLightbox();
+    if (e.key === 'ArrowLeft') { currentIdx = (currentIdx - 1 + currentSrcs.length) % currentSrcs.length; renderLb(); }
+    if (e.key === 'ArrowRight') { currentIdx = (currentIdx + 1) % currentSrcs.length; renderLb(); }
+  });
+
+  document.querySelectorAll('.photo-strip').forEach(strip => {
+    const modelId = strip.dataset.model;
+    const thumbEls = strip.querySelectorAll('.strip-thumb');
+    const srcs = Array.from(thumbEls).map(t => t.querySelector('img').src);
+    thumbEls.forEach((thumb, i) => {
+      thumb.addEventListener('click', () => openLightbox(modelId, i, srcs));
+    });
+  });
+</script>
 
 </body>
 </html>
