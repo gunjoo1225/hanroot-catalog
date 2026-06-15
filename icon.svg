@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- Background -->
+  <rect width="512" height="512" fill="#08080d"/>
+  <!-- Outer border -->
+  <rect x="18" y="18" width="476" height="476" fill="none" stroke="#c9a96e" stroke-width="2" opacity="0.45" rx="6"/>
+  <!-- Inner border -->
+  <rect x="30" y="30" width="452" height="452" fill="none" stroke="#c9a96e" stroke-width="1" opacity="0.2" rx="4"/>
+
+  <!-- H letter (paths) -->
+  <!-- Left vertical bar -->
+  <rect x="100" y="108" width="62" height="284" fill="#c9a96e"/>
+  <!-- Right vertical bar -->
+  <rect x="350" y="108" width="62" height="284" fill="#c9a96e"/>
+  <!-- Crossbar -->
+  <rect x="100" y="221" width="312" height="62" fill="#c9a96e"/>
+
+  <!-- Thin accent line above text -->
+  <line x1="148" y1="428" x2="364" y2="428" stroke="#c9a96e" stroke-width="1" opacity="0.5"/>
+
+  <!-- HANROOT -->
+  <text x="256" y="462"
+    font-family="Helvetica Neue, Arial, sans-serif"
+    font-size="38" font-weight="700"
+    text-anchor="middle"
+    fill="#c9a96e"
+    letter-spacing="14"
+    opacity="0.85">HANROOT</text>
+</svg>

@@ -1,0 +1,26 @@
+{
+  "name": "HANROOT 2026 COLLECTION",
+  "short_name": "HANROOT",
+  "description": "HANROOT 2026 유니폼 컬렉션 카탈로그",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "landscape",
+  "background_color": "#08080d",
+  "theme_color": "#08080d",
+  "lang": "ko",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "images/dark/ch01.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}

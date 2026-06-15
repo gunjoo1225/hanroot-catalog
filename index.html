@@ -4,6 +4,15 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>HANROOT 2026 COLLECTION</title>
+
+  <!-- PWA -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#08080d">
+  <!-- iOS -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="HANROOT">
+  <link rel="apple-touch-icon" href="icon.svg">
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -226,6 +235,50 @@
     .mt-btn.active-dark  { background: var(--gold); color: #08080d; }
     .mt-btn.active-light { background: rgba(210,230,240,0.9); color: #08080d; }
 
+    /* ── PWA Install Button ── */
+    .install-btn {
+      display: flex; align-items: center; justify-content: center;
+      width: 32px; height: 32px; border-radius: 50%;
+      border: 1px solid rgba(255,255,255,0.25);
+      background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.8);
+      cursor: pointer; transition: all 0.2s;
+      text-shadow: 0 1px 4px rgba(0,0,0,0.55);
+    }
+    .install-btn svg { width: 16px; height: 16px; }
+    .install-btn:hover { border-color: var(--gold); color: var(--gold); background: rgba(201,169,110,0.1); }
+
+    /* iOS 안내 팝업 */
+    .ios-popup {
+      position: fixed; bottom: 90px; left: 50%; transform: translateX(-50%);
+      background: rgba(20,20,24,0.96); backdrop-filter: blur(16px);
+      border: 1px solid rgba(201,169,110,0.35); border-radius: 14px;
+      padding: 18px 24px; z-index: 90; min-width: 280px; max-width: 340px;
+      text-align: center; display: none;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.6);
+    }
+    .ios-popup.show { display: block; animation: fadeUp 0.25s ease; }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateX(-50%) translateY(10px); }
+      to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+    }
+    .ios-popup p { font-size: 13px; color: rgba(255,255,255,0.85); line-height: 1.6; }
+    .ios-popup strong { color: var(--gold); }
+    .ios-popup .share-icon {
+      display: inline-block; width: 18px; height: 18px; vertical-align: middle;
+      background: currentColor; -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M4 12v8a2 2 0 002 2h12a2 2 0 002-2v-8M16 6l-4-4-4 4M12 2v13' stroke='black' stroke-width='2' fill='none'/%3E%3C/svg%3E") center/cover no-repeat;
+      color: var(--gold);
+    }
+    .ios-popup-close {
+      margin-top: 12px; font-size: 11px; color: rgba(255,255,255,0.35);
+      background: none; border: none; cursor: pointer; letter-spacing: 1px;
+    }
+    /* 말풍선 꼬리 (아래 방향) */
+    .ios-popup::after {
+      content: ''; position: absolute; bottom: -8px; left: 50%; transform: translateX(-50%);
+      border-left: 8px solid transparent; border-right: 8px solid transparent;
+      border-top: 8px solid rgba(201,169,110,0.35);
+    }
+
     /* ── Loading flash ── */
     .flash {
       position: fixed; inset: 0; background: var(--bg);
@@ -248,6 +301,14 @@
   </div>
   <div class="header-right">
     <span class="page-counter" id="pageCounter"></span>
+    <button class="install-btn" id="installBtn" title="홈 화면에 추가" style="display:none">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+        <rect x="5" y="2" width="14" height="20" rx="2"/>
+        <line x1="12" y1="7" x2="12" y2="14"/>
+        <polyline points="9 11 12 14 15 11"/>
+        <line x1="9" y1="17" x2="15" y2="17"/>
+      </svg>
+    </button>
     <a class="cover-link" href="models.html">모델 소개</a>
     <a class="cover-link" href="cover.html">표지 시안 →</a>
     <div class="mode-toggle">
@@ -286,6 +347,23 @@
 <div class="zoom-badge" id="zoomBadge"></div>
 <div class="flash"      id="flash"></div>
 <nav class="chapter-bar" id="chapterBar"></nav>
+
+<!-- iOS 홈 화면 추가 안내 팝업 -->
+<div class="ios-popup" id="iosPopup">
+  <p>
+    Safari 하단의 <strong>공유</strong> 버튼
+    <span style="display:inline-block;width:18px;height:18px;vertical-align:middle;margin:0 2px">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#c9a96e" stroke-width="2" style="width:18px;height:18px">
+        <path d="M4 12v8a2 2 0 002 2h12a2 2 0 002-2v-8"/>
+        <polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/>
+      </svg>
+    </span>
+    을 누른 뒤<br>
+    <strong>홈 화면에 추가</strong>를 선택하세요.<br>
+    <span style="font-size:11px;opacity:0.55">그러면 앱처럼 바로 열립니다</span>
+  </p>
+  <button class="ios-popup-close" onclick="document.getElementById('iosPopup').classList.remove('show')">닫기</button>
+</div>
 
 <script>
   // ── Data ──────────────────────────────────────────────────────────────────
@@ -696,6 +774,46 @@
   buildPages(); buildBar(); showSpread(0);
   pages.slice(0, 6).forEach(p => preload(p.src));
   setTimeout(() => { elZoomHint.style.opacity = '0.5'; }, 800);
+
+  // ── PWA 홈 화면 추가 ──────────────────────────────────────────────────────
+  const installBtn = document.getElementById('installBtn');
+  const iosPopup   = document.getElementById('iosPopup');
+  let deferredPrompt = null;
+
+  // Android / Chrome: 설치 프롬프트 이벤트 캐치
+  window.addEventListener('beforeinstallprompt', e => {
+    e.preventDefault();
+    deferredPrompt = e;
+    installBtn.style.display = 'flex'; // 버튼 표시
+  });
+
+  // iOS 판별 (Safari)
+  const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+  const isInStandalone = window.matchMedia('(display-mode: standalone)').matches
+    || window.navigator.standalone === true;
+
+  if (isIOS && !isInStandalone) {
+    installBtn.style.display = 'flex'; // iOS에서도 버튼 표시
+  }
+
+  installBtn.addEventListener('click', async () => {
+    if (deferredPrompt) {
+      // Android: 네이티브 프롬프트 표시
+      deferredPrompt.prompt();
+      const { outcome } = await deferredPrompt.userChoice;
+      deferredPrompt = null;
+      if (outcome === 'accepted') installBtn.style.display = 'none';
+    } else {
+      // iOS: 안내 팝업 표시
+      iosPopup.classList.toggle('show');
+    }
+  });
+
+  // 설치 완료 시 버튼 숨기기
+  window.addEventListener('appinstalled', () => {
+    installBtn.style.display = 'none';
+    iosPopup.classList.remove('show');
+  });
 </script>
 </body>
 </html>
