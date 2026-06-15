@@ -54,6 +54,16 @@
     }
     .catalog-link:hover { color: var(--gold); border-color: var(--gold-dim); }
 
+    #fsBtn {
+      display: flex; align-items: center; justify-content: center;
+      width: 32px; height: 32px; border-radius: 50%;
+      border: 1px solid rgba(255,255,255,0.25);
+      background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.8);
+      cursor: pointer; transition: all 0.2s; flex-shrink: 0;
+    }
+    #fsBtn svg { width: 16px; height: 16px; }
+    #fsBtn:hover { border-color: var(--gold); color: var(--gold); background: rgba(201,169,110,0.1); }
+
     /* ── Mode Toggle ── */
     .mode-toggle {
       display: flex; align-items: center;
@@ -212,6 +222,7 @@
       <span class="hd-sub">2026 표지 시안</span>
     </div>
     <div class="header-right">
+      <button id="fsBtn" title="전체화면"></button>
       <a class="catalog-link" href="models.html">모델 소개</a>
       <a class="catalog-link" href="index.html">카탈로그 보기 →</a>
       <div class="mode-toggle">
@@ -454,6 +465,7 @@
   // ── Keyboard & Touch ──────────────────────────────────────────────────────
   document.addEventListener('keydown', e => {
     if (e.key === 'Escape') { resetZoom(); return; }
+    if (e.key === 'f' || e.key === 'F') { toggleFullscreen(); return; }
     if (zoom > 1) return;
     if (e.key === 'ArrowRight' || e.key === 'ArrowDown') move(1);
     if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')   move(-1);
@@ -470,6 +482,37 @@
     const dx = e.changedTouches[0].clientX - tx;
     if (Math.abs(dx) > 48) move(dx < 0 ? 1 : -1);
   });
+
+  // ── Fullscreen ────────────────────────────────────────────────────────────
+  const FS_KEY = 'hanroot_fs';
+  const _isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+  const fsBtn = document.getElementById('fsBtn');
+  const FS_ICON_EXPAND = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+    <polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/>
+    <line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/>
+  </svg>`;
+  const FS_ICON_SHRINK = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+    <polyline points="4 14 10 14 10 20"/><polyline points="20 10 14 10 14 4"/>
+    <line x1="10" y1="14" x2="3" y2="21"/><line x1="21" y1="3" x2="14" y2="10"/>
+  </svg>`;
+  function isFull() { return !!(document.fullscreenElement || document.webkitFullscreenElement); }
+  function updateFsIcon() { fsBtn.innerHTML = isFull() ? FS_ICON_SHRINK : FS_ICON_EXPAND; }
+  function toggleFullscreen() {
+    if (!isFull()) { const el = document.documentElement; (el.requestFullscreen || el.webkitRequestFullscreen || function(){}).call(el); }
+    else { (document.exitFullscreen || document.webkitExitFullscreen || function(){}).call(document); }
+  }
+  if (_isIOS) {
+    fsBtn.style.display = 'none';
+  } else {
+    fsBtn.addEventListener('click', toggleFullscreen);
+    document.addEventListener('fullscreenchange', () => { localStorage.setItem(FS_KEY, isFull() ? '1' : '0'); updateFsIcon(); });
+    document.addEventListener('webkitfullscreenchange', () => { localStorage.setItem(FS_KEY, isFull() ? '1' : '0'); updateFsIcon(); });
+    updateFsIcon();
+    if (localStorage.getItem(FS_KEY) === '1') {
+      const el = document.documentElement;
+      (el.requestFullscreen || el.webkitRequestFullscreen || function(){}).call(el);
+    }
+  }
 
   // ── Init ──────────────────────────────────────────────────────────────────
   buildTabs();
