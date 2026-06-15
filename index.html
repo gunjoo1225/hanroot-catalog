@@ -26,15 +26,16 @@
       height: 52px;
       display: flex; justify-content: space-between; align-items: center;
       padding: 0 28px;
-      background: rgba(8,8,13,0.97);
-      border-bottom: 1px solid rgba(255,255,255,0.07);
+      background: rgba(8,8,13,0.52);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
     }
     .logo-group { display: flex; align-items: center; gap: 14px; }
     .logo { font-size: 17px; font-weight: 800; letter-spacing: 6px; color: var(--gold); }
     .logo-sep { width: 1px; height: 14px; background: var(--gold-dim); }
-    .collection-label { font-size: 10px; letter-spacing: 3px; color: rgba(255,255,255,0.35); }
+    .collection-label { font-size: 10px; letter-spacing: 3px; color: rgba(255,255,255,0.45); }
     .header-right { display: flex; align-items: center; gap: 16px; }
-    .page-counter { font-size: 11px; letter-spacing: 2px; color: rgba(255,255,255,0.3); }
+    .page-counter { font-size: 11px; letter-spacing: 2px; color: rgba(255,255,255,0.5); }
 
     /* Progress bar */
     .progress-bar {
@@ -45,9 +46,9 @@
 
     /* ── Viewer ── */
     .viewer {
-      position: fixed; top: 54px; left: 0; right: 0; bottom: 0;
+      position: fixed; inset: 0;
       display: flex; align-items: stretch; justify-content: center;
-      padding: 12px 48px 80px; overflow: hidden;
+      padding: 0 48px 72px; overflow: hidden;
     }
     .img-stage {
       position: relative;
@@ -57,9 +58,10 @@
     }
     .page-type-badge {
       font-size: 9px; letter-spacing: 2.5px; font-weight: 600; transition: color 0.3s;
+      text-shadow: 0 1px 4px rgba(0,0,0,0.5);
     }
-    .badge-dark  { color: rgba(201,169,110,0.65); }
-    .badge-light { color: rgba(160,200,220,0.65); }
+    .badge-dark  { color: rgba(201,169,110,0.85); }
+    .badge-light { color: rgba(201,169,110,0.85); }
 
     /* ── Zoom Wrapper ── */
     #zoomWrapper {
@@ -202,9 +204,10 @@
 
     /* ── Header links ── */
     .cover-link {
-      font-size: 10px; letter-spacing: 2px; color: rgba(255,255,255,0.3);
-      text-decoration: none; border: 1px solid rgba(255,255,255,0.12);
+      font-size: 10px; letter-spacing: 2px; color: rgba(255,255,255,0.82);
+      text-decoration: none; border: 1px solid rgba(255,255,255,0.28);
       padding: 5px 14px; border-radius: 20px; transition: all 0.2s;
+      text-shadow: 0 1px 4px rgba(0,0,0,0.55);
     }
     .cover-link:hover { color: var(--gold); border-color: var(--gold-dim); }
 
