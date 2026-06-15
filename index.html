@@ -55,9 +55,9 @@
 
     /* Progress bar */
     .progress-bar {
-      position: fixed; top: 52px; left: 0; height: 2px;
+      position: fixed; top: 52px; height: 2px;
       background: linear-gradient(90deg, var(--gold), rgba(201,169,110,0.3));
-      transition: width 0.35s ease; z-index: 70;
+      transition: width 0.35s ease, left 0.15s ease; z-index: 70;
     }
 
     /* ── Viewer ── */
@@ -449,11 +449,15 @@
   const elFlash         = document.getElementById('flash');
 
   // ── Helpers ───────────────────────────────────────────────────────────────
+  let progLeft = 0, progTotal = window.innerWidth; // 이미지 로드 후 alignHeader()가 갱신
+
   function updateUI() {
     elCounter.textContent = `CH ${cur + 1} / ${SPREAD_COUNT}`;
     elPrev.disabled       = cur === 0;
     elNext.disabled       = cur === SPREAD_COUNT - 1;
-    elProg.style.width    = ((cur + 1) / SPREAD_COUNT * 100) + '%';
+    const ratio = (cur + 1) / SPREAD_COUNT;
+    elProg.style.left  = progLeft + 'px';
+    elProg.style.width = (progTotal * ratio) + 'px';
     updateBadge(); updateBar();
     elImgRight.style.cursor = cur < SPREAD_COUNT - 1 ? 'grab' : 'default';
     elImgLeft.style.cursor  = cur > 0               ? 'grab' : 'default';
@@ -788,6 +792,10 @@
     const padL = Math.max(16, Math.floor(rL.left) - 4);
     const padR = Math.max(16, Math.floor(window.innerWidth - rR.right) - 4);
     elHeaderInner.style.padding = `0 ${padR}px 0 ${padL}px`;
+    // progress bar 도 이미지 영역 기준으로 갱신
+    progLeft  = Math.floor(rL.left);
+    progTotal = Math.floor(rR.right) - progLeft;
+    updateUI();
   }
   window.addEventListener('resize', alignHeader);
 
