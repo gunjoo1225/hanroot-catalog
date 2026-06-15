@@ -26,17 +26,22 @@
     header {
       position: fixed;
       top: 0; left: 0; right: 0; z-index: 60;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 16px 36px;
-      background: linear-gradient(180deg, rgba(7,7,12,0.97) 55%, transparent);
+      height: 52px;
+      display: flex; align-items: center; justify-content: center;
+      padding: 0;
+      background: rgba(7,7,12,0.52);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
     }
-
+    .header-inner {
+      width: 100%; max-width: 1200px;
+      margin: 0 auto; padding: 0 56px;
+      display: flex; justify-content: space-between; align-items: center;
+    }
     .logo-group { display: flex; align-items: center; gap: 14px; }
     .logo  { font-size: 17px; font-weight: 800; letter-spacing: 6px; color: var(--gold); }
     .sep   { width: 1px; height: 14px; background: var(--gold-dim); }
-    .hd-sub { font-size: 10px; letter-spacing: 3px; color: rgba(255,255,255,0.35); }
+    .hd-sub { font-size: 10px; letter-spacing: 3px; color: rgba(255,255,255,0.45); }
 
     .header-right { display: flex; align-items: center; gap: 16px; }
 
@@ -70,7 +75,7 @@
     .stage {
       position: fixed; inset: 0;
       display: flex; align-items: center; justify-content: center;
-      padding: 64px 70px 116px;
+      padding: 54px 70px 116px;
       gap: 24px;
     }
 
@@ -192,17 +197,19 @@
 <div class="flash" id="flash"></div>
 
 <header>
-  <div class="logo-group">
-    <span class="logo">HANROOT</span>
-    <span class="sep"></span>
-    <span class="hd-sub">2026 표지 시안</span>
-  </div>
-  <div class="header-right">
-    <a class="catalog-link" href="models.html">모델 소개</a>
-    <a class="catalog-link" href="index.html">카탈로그 보기 →</a>
-    <div class="mode-toggle">
-      <button class="mt-btn active-dark" id="btnDark"  onclick="switchMode('dark')">DARK</button>
-      <button class="mt-btn"             id="btnLight" onclick="switchMode('light')">LIGHT</button>
+  <div class="header-inner">
+    <div class="logo-group">
+      <span class="logo">HANROOT</span>
+      <span class="sep"></span>
+      <span class="hd-sub">2026 표지 시안</span>
+    </div>
+    <div class="header-right">
+      <a class="catalog-link" href="models.html">모델 소개</a>
+      <a class="catalog-link" href="index.html">카탈로그 보기 →</a>
+      <div class="mode-toggle">
+        <button class="mt-btn active-dark" id="btnDark"  onclick="switchMode('dark')">DARK</button>
+        <button class="mt-btn"             id="btnLight" onclick="switchMode('light')">LIGHT</button>
+      </div>
     </div>
   </div>
 </header>
