@@ -33,11 +33,18 @@
     header {
       position: fixed; top: 0; left: 0; right: 0; z-index: 60;
       height: 52px;
-      display: flex; justify-content: space-between; align-items: center;
-      padding: 0 28px;
+      display: flex; align-items: center; justify-content: center;
+      padding: 0;
       background: rgba(8,8,13,0.52);
       backdrop-filter: blur(14px);
       -webkit-backdrop-filter: blur(14px);
+    }
+    /* 헤더 내부 wrapper: JS가 실제 페이지 위치에 맞춰 padding을 조정 */
+    .header-inner {
+      width: 100%;
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 0 56px; /* 기본값, JS가 override */
+      transition: padding 0.15s ease;
     }
     .logo-group { display: flex; align-items: center; gap: 14px; }
     .logo { font-size: 17px; font-weight: 800; letter-spacing: 6px; color: var(--gold); }
@@ -57,7 +64,7 @@
     .viewer {
       position: fixed; inset: 0;
       display: flex; align-items: stretch; justify-content: center;
-      padding: 0 48px 72px; overflow: hidden;
+      padding: 54px 48px 72px; overflow: hidden;
     }
     .img-stage {
       position: relative;
@@ -292,28 +299,30 @@
 <div class="progress-bar" id="progressBar"></div>
 
 <header>
-  <div class="logo-group">
-    <span class="logo">HANROOT</span>
-    <span class="logo-sep"></span>
-    <span class="collection-label">2026 COLLECTION</span>
-    <span class="logo-sep"></span>
-    <span class="page-type-badge" id="typeBadge"></span>
-  </div>
-  <div class="header-right">
-    <span class="page-counter" id="pageCounter"></span>
-    <button class="install-btn" id="installBtn" title="홈 화면에 추가" style="display:none">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-        <rect x="5" y="2" width="14" height="20" rx="2"/>
-        <line x1="12" y1="7" x2="12" y2="14"/>
-        <polyline points="9 11 12 14 15 11"/>
-        <line x1="9" y1="17" x2="15" y2="17"/>
-      </svg>
-    </button>
-    <a class="cover-link" href="models.html">모델 소개</a>
-    <a class="cover-link" href="cover.html">표지 시안 →</a>
-    <div class="mode-toggle">
-      <button class="mt-btn active-dark" id="btnDark"  onclick="switchMode('dark')">DARK</button>
-      <button class="mt-btn"             id="btnLight" onclick="switchMode('light')">LIGHT</button>
+  <div class="header-inner" id="headerInner">
+    <div class="logo-group">
+      <span class="logo">HANROOT</span>
+      <span class="logo-sep"></span>
+      <span class="collection-label">2026 COLLECTION</span>
+      <span class="logo-sep"></span>
+      <span class="page-type-badge" id="typeBadge"></span>
+    </div>
+    <div class="header-right">
+      <span class="page-counter" id="pageCounter"></span>
+      <button class="install-btn" id="installBtn" title="홈 화면에 추가" style="display:none">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <rect x="5" y="2" width="14" height="20" rx="2"/>
+          <line x1="12" y1="7" x2="12" y2="14"/>
+          <polyline points="9 11 12 14 15 11"/>
+          <line x1="9" y1="17" x2="15" y2="17"/>
+        </svg>
+      </button>
+      <a class="cover-link" href="models.html">모델 소개</a>
+      <a class="cover-link" href="cover.html">표지 시안 →</a>
+      <div class="mode-toggle">
+        <button class="mt-btn active-dark" id="btnDark"  onclick="switchMode('dark')">DARK</button>
+        <button class="mt-btn"             id="btnLight" onclick="switchMode('light')">LIGHT</button>
+      </div>
     </div>
   </div>
 </header>
@@ -770,10 +779,26 @@
   });
   elZoom.addEventListener('dblclick', resetZoom);
 
+  // ── 헤더를 페이지 실제 위치에 맞춰 패딩 조정 ────────────────────────────
+  const elHeaderInner = document.getElementById('headerInner');
+  function alignHeader() {
+    const rL = elImgLeft.getBoundingClientRect();
+    const rR = elImgRight.getBoundingClientRect();
+    if (!rL.width || !rR.width) return;
+    const padL = Math.max(16, Math.floor(rL.left) - 4);
+    const padR = Math.max(16, Math.floor(window.innerWidth - rR.right) - 4);
+    elHeaderInner.style.padding = `0 ${padR}px 0 ${padL}px`;
+  }
+  window.addEventListener('resize', alignHeader);
+
   // ── Init ──────────────────────────────────────────────────────────────────
   buildPages(); buildBar(); showSpread(0);
   pages.slice(0, 6).forEach(p => preload(p.src));
   setTimeout(() => { elZoomHint.style.opacity = '0.5'; }, 800);
+  // 첫 이미지 로드 후 헤더 정렬
+  elImgLeft.addEventListener('load',  alignHeader, { once: true });
+  elImgRight.addEventListener('load', alignHeader, { once: true });
+  setTimeout(alignHeader, 600); // 캐시 히트 시 fallback
 
   // ── PWA 홈 화면 추가 ──────────────────────────────────────────────────────
   const installBtn = document.getElementById('installBtn');
